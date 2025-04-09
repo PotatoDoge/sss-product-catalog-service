@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SssProductCatalogServiceApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(SssProductCatalogServiceApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(SssProductCatalogServiceApplication.class, args);
+    }
 
 }

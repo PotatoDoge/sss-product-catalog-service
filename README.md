@@ -8,11 +8,8 @@ Project Structure
 
 SmartShoppingSystem-backend/\
 ├── recommendation-service/    # Handles product recommendations (Hexagonal)\
-├── product-catalog-service/   # Manages products and inventory (Hexagonal)\
-├── user-service/              # Manages users and preferences (Onion)\
-├── kubernetes/                # Kubernetes manifests (Deployments, Services, etc.)\
-├── docker/                    # Docker-related config (Docker Compose, Dockerfiles)\
-└── README.md                  # This file
+├── **product-catalog-service**/   # Manages products and inventory (Hexagonal)\
+├── user-service/              # Manages users and preferences (Onion)
 
 ---
 
@@ -31,30 +28,72 @@ SmartShoppingSystem-backend/\
 
 ---
 
-## Microservices Overview
+# Product Catalog Service
 
-### 1. Recommendation Service (Hexagonal)
-
-- **Responsibilities**:
-    - Consumes user activity events via Kafka
-    - Provides product recommendations through REST API
-    - Clean separation of core logic from infrastructure via ports and adapters
-
-### 2. Product Catalog Service (Hexagonal)
-
-- **Responsibilities**:
-    - Manages products, stock, and categories
-    - Publishes Kafka events when products are updated
-    - Exposes REST APIs for querying product data
-
-### 3. User Service (Onion)
-
-- **Responsibilities**:
-    - Manages user accounts, preferences, and profiles
-    - Sends REST requests to the Recommendation Service for personalized feeds
-    - Core domain logic isolated in the inner circle
+The **Product Catalog Service** is a core component of the SmartShoppingSystem. It is responsible for managing all product-related data and exposing APIs for other services and clients to interact with the product catalog. The service is designed following the **Hexagonal Architecture**, ensuring a clean separation between domain logic and infrastructure concerns.
 
 ---
+
+## 🧠 Responsibilities
+
+- Manage products, inventory, and categories.
+- Provide RESTful endpoints for product operations.
+- Publish Kafka events when product data changes (e.g., create/update/delete).
+- Integrate with a PostgreSQL database for data persistence.
+
+---
+
+## 🧱 Architecture Overview
+
+The service follows **Hexagonal (Ports and Adapters) Architecture**, which includes:
+
+- **Domain Layer**: Business logic and core models.
+- **Application Layer**: Use cases and service orchestration.
+- **Adapters**:
+    - **Inbound**: REST controllers.
+    - **Outbound**: Repositories (JPA), Kafka producers.
+- **Ports**: Interfaces used by the domain to abstract infrastructure.
+
+---
+
+## 📡 REST Endpoints
+
+| Method | Endpoint             | Description              |
+|--------|----------------------|--------------------------|
+| GET    | `/products`          | Get all products         |
+| GET    | `/products/{id}`     | Get a product by ID      |
+| POST   | `/products`          | Create a new product     |
+| PUT    | `/products/{id}`     | Update an existing product |
+| DELETE | `/products/{id}`     | Delete a product         |
+
+---
+
+## 🔄 Kafka Integration
+
+- **Topic**: `product.events`
+- **Event Types**:
+    - `ProductCreated`
+    - `ProductUpdated`
+    - `ProductDeleted`
+
+These events can be consumed by services like the **Recommendation Service** to keep product information in sync.
+
+---
+
+## ⚙️ How to Run Locally
+
+1. **Navigate to the service folder**:
+   ```bash
+   cd product-catalog-service
+
+1. **Build the service:r**:
+   ```bash
+   ./mvnw clean install
+
+1. **Run the service:**:
+   ```bash
+   ./mvnw spring-boot:run
+
 
 ## Communication Patterns
 
@@ -98,42 +137,9 @@ This includes:
 
 ---
 
-## Getting Started with Development
-
-1. **Clone the repository**:
-    ```bash
-    git clone https://github.com/yourusername/SmartShoppingSystem-backend.git
-    ```
-
-2. **Navigate to the service folder** (e.g., `user-service`):
-    ```bash
-    cd user-service
-    ```
-
-3. **Build and run the service**:
-    ```bash
-    ./mvnw clean install   # For Maven-based projects
-    # OR
-    ./gradlew build        # For Gradle-based projects
-    ```
-
-4. Once built, you can run the service with:
-    ```bash
-    java -jar target/user-service.jar
-    ```
-
----
-
-## License
-
-MIT License (or specify your own license).
-
----
-
 ## Contributors
 
-- **Your Name**
-- **Collaborators**
+- https://github.com/PotatoDoge
 
 ---
 
